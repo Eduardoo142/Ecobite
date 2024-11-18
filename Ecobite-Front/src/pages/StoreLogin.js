@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const LoginScreen = () => {
+const StoreLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState(""); // Almacena el email
   const [password, setPassword] = useState(""); // Almacena la contraseña
@@ -15,7 +15,7 @@ const LoginScreen = () => {
     e.preventDefault();
     setError(null); // Reinicia el estado de error
 
-    const loginData = { email, password, userType:"client" };
+    const loginData = { email, password, userType: "store" };
 
     try {
       const response = await fetch("http://localhost:3001/auth/login", {
@@ -32,7 +32,9 @@ const LoginScreen = () => {
 
       const data = await response.json();
       localStorage.setItem("token", data.accessToken); // Guarda el token en el almacenamiento local
-      navigate("/business-list"); // Redirige a la lista de negocios
+      localStorage.setItem("userType", data.userType); // Guarda el tipo de usuario en el almacenamiento local
+      localStorage.setItem("storeId", data.id); // Guarda el id de la tienda en el almacenamiento local
+      navigate("/store-home"); // Redirige a la lista de negocios
     } catch (err) {
       setError(err.message); // Muestra el mensaje de error en la UI
     }
@@ -42,7 +44,7 @@ const LoginScreen = () => {
     <div className="flex flex-col justify-center items-center h-screen bg-[#FF6F6F] text-black">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-5xl font-bold mb-6 text-center text-[#FF6F6F] font-leaguespartan">
-          Iniciar sesión cliente
+          Iniciar sesión tienda
         </h2>
 
         <form className="flex flex-col" onSubmit={handleSubmit}>
@@ -84,4 +86,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default StoreLogin;

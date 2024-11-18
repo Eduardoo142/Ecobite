@@ -5,8 +5,12 @@ const SelectRoleScreen = () => {
   const navigate = useNavigate();
 
   // Función para redirigir a la página de login
-  const handleLogin = () => {
+  const handleClientLogin = () => {
     navigate('/login');
+  };
+
+  const handleStoreLogin = () => {
+    navigate('/store-login');
   };
 
   return (
@@ -16,7 +20,7 @@ const SelectRoleScreen = () => {
         <div className="flex flex-col">
           <h3 className='text-2xl text-left font-leaguespartan text-black mt-16 mb-8'>Ingreso como usuario</h3>
           <button
-            onClick={handleLogin}
+            onClick={handleClientLogin}
             className="text-4xl text-white font-bold font-leaguespartan bg-[#FF6F6F] p-2 rounded-lg shadow-lg"
           >
             ¡Quiero comprar!
@@ -24,7 +28,7 @@ const SelectRoleScreen = () => {
 
           <h3 className='text-2xl text-left font-leaguespartan text-black mt-16 mb-8'>Ingreso como establecimiento</h3>
           <button
-            onClick={handleLogin}
+            onClick={handleStoreLogin}
             className="text-4xl text-white font-bold font-leaguespartan bg-[#FF6F6F] p-2 rounded-lg shadow-lg"
           >
             ¡Quiero ofrecer mis productos!
