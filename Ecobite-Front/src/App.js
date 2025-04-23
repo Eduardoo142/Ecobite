@@ -15,6 +15,8 @@ import ProductAvailability from './pages/ProductAvailability';
 import RegisterStore from './pages/RegisterStore';
 import ShoppingCart from './pages/ShoppingCart';
 import StoreHome from './pages/StoreHome';
+import PaymentPage from './pages/PaymentPage'
+import BlockchainTransactions from './pages/BlockchainTransactions'
 
 // Componente Layout para manejar la lógica del ícono del carrito
 const Layout = ({ children, cartItems }) => {
@@ -61,10 +63,11 @@ function App() {
           <Route path="/account-details" element={<AccountDetails />} />
           <Route path="/register-store" element={<RegisterStore />} />
           <Route path="/store-home" element={<StoreHome />} />
+          <Route path="/blockchain-transactions" element={<BlockchainTransactions />} />
           
           {/* Vista de lista de negocios */}
           <Route path="/business-list" element={<BusinessList />} />
-          
+          <Route path="/payment" element={<PaymentPage cartItems={cartItems} />} />          
           {/* Vista de disponibilidad de productos con opción de añadir al carrito */}
           <Route
             path="/availability/:businessId"

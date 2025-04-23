@@ -22,7 +22,7 @@ import { AuthController } from './auth/auth.controller';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'Eduardo2003@',
+      password: '1234',
       database: 'Foodie',
       entities: [Tienda, Cliente, Producto],
       autoLoadEntities: true,

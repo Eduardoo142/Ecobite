@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import { BrowserProvider, Contract, formatEther } from 'ethers';
+import contractABI from '../utils/blockchain';
+import contractAddress from '../utils/blockchain';
 import whatsappLogo from '../assets/whatsapp-logo.png';
 
 const ProductAvailability = ({ addToCart }) => {
   const { businessId } = useParams();
   const [business, setBusiness] = useState(null);
   const [products, setProducts] = useState([]);
+  const [blockchainProducts, setBlockchainProducts] = useState([]);
 
-  // Cargar los datos de la tienda
   useEffect(() => {
     const fetchBusiness = async () => {
       try {
@@ -22,7 +25,6 @@ const ProductAvailability = ({ addToCart }) => {
     fetchBusiness();
   }, [businessId]);
 
-  // Cargar los productos de la tienda
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -39,9 +41,42 @@ const ProductAvailability = ({ addToCart }) => {
     }
   }, [businessId]);
 
-  // Función para agregar productos al carrito
+  useEffect(() => {
+    const fetchBlockchainProducts = async () => {
+      try {
+        if (!window.ethereum) {
+          console.error("MetaMask no está instalado.");
+          return;
+        }
+
+        const provider = new BrowserProvider(window.ethereum);
+        const contract = new Contract(contractAddress, contractABI, provider);
+
+        const blockchainData = await contract.getProducts();
+        
+        const filteredProducts = await Promise.all(
+          blockchainData
+            .filter(p => p.owner.toLowerCase() === businessId.toLowerCase())
+            .map(async (product) => {
+              const tx = await provider.getTransaction(product.txHash);
+              return {
+                ...product,
+                blockHash: tx ? tx.blockHash : 'Desconocido',
+              };
+            })
+        );
+
+        setBlockchainProducts(filteredProducts);
+      } catch (error) {
+        console.error("Error al obtener productos de la blockchain:", error);
+      }
+    };
+
+    fetchBlockchainProducts();
+  }, [businessId]);
+
   const handleAddToCart = (product) => {
-    addToCart(product); // Aquí llamamos a la función pasada como prop
+    addToCart(product);
   };
 
   if (!business) return <div>Cargando tienda...</div>;
@@ -64,7 +99,7 @@ const ProductAvailability = ({ addToCart }) => {
             className="mb-4 p-3 rounded-lg border border-gray-300 font-sanchez"
           />
           
-          {/* Productos */}
+          {/* Productos desde la base de datos */}
           <div className="mt-8">
             <h2 className="text-2xl font-spartan text-[#FF6F6F] mb-4">Productos Disponibles</h2>
             {products.length > 0 ? (
@@ -75,22 +110,21 @@ const ProductAvailability = ({ addToCart }) => {
                     <p className="text-gray-700 font-sanchez">Precio: ${product.precio}</p>
                     <p className="text-gray-500 font-sanchez">{product.description}</p>
 
-                    {/* Mostrar foto del producto */}
-                  {product.foto && (
-                    <div className="mt-4">
-                      <a href={product.foto} target="_blank" rel="noopener noreferrer">
-                        <img
-                          src={product.foto}
-                          alt={product.nombre}
-                          className="w-64 h-64 object-contain mx-auto"
-                        />
-                      </a>
-                    </div>
-                  )}
+                    {product.foto && (
+                      <div className="mt-4">
+                        <a href={product.foto} target="_blank" rel="noopener noreferrer">
+                          <img src={product.foto} alt={product.nombre} className="w-64 h-64 object-contain mx-auto" />
+                        </a>
+                        <Link 
+                          to={`/blockchain-transactions`} 
+                          className="block mt-1 text-center text-[#FF6F6F] font-spartan underline">
+                          Ver transacciones en blockchain
+                        </Link>
+                      </div>
+                    )}
 
-                    {/* Botón para agregar al carrito */}
                     <button
-                      onClick={() => handleAddToCart(product)} // Aquí se añade el producto al carrito
+                      onClick={() => handleAddToCart(product)}
                       className="bg-[#FF6F6F] text-white p-2 rounded-lg mt-4"
                     >
                       Añadir al carrito

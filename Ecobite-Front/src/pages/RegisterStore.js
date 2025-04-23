@@ -70,7 +70,7 @@ const RegisterStore = () => {
     };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/tiendas`, {
+      const response = await fetch(`http://localhost:3001/tiendas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

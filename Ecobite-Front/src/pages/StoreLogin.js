@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 const StoreLogin = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState(""); // Almacena el email
-  const [password, setPassword] = useState(""); // Almacena la contraseña
-  const [error, setError] = useState(null); // Almacena mensajes de error
+  const [email, setEmail] = useState(""); 
+  const [password, setPassword] = useState(""); 
+  const [error, setError] = useState(null);
 
   const handleNoAccount = () => {
     navigate("/select-account-type");
@@ -13,7 +13,7 @@ const StoreLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Reinicia el estado de error
+    setError(null); 
 
     const loginData = { email, password, userType: "store" };
 
